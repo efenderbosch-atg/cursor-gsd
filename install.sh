@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 # GSD Workflow Commands — Installer / Updater
-# Usage: curl -fsSL https://raw.githubusercontent.com/ben-smith-atg/cursor-gsd/main/install.sh | bash
+#
+# Requires: gh CLI (https://cli.github.com) — authenticated with repo access
+#
+# Usage:
+#   gh api repos/ben-smith-atg/cursor-gsd/contents/install.sh --jq '.content' \
+#     | base64 -d | bash
+#
+# Or clone and run locally:
+#   bash ~/.cursor/commands/gsd/install.sh
 set -euo pipefail
 
-BASE="https://raw.githubusercontent.com/ben-smith-atg/cursor-gsd/main"
+REPO="ben-smith-atg/cursor-gsd"
 DEST="${HOME}/.cursor/commands/gsd"
 FILES=(
   setup-gsd.md
@@ -15,18 +23,20 @@ FILES=(
   README.md
 )
 
+if ! command -v gh &>/dev/null; then
+  echo "Error: gh CLI is required. Install from https://cli.github.com" >&2
+  exit 1
+fi
+
 mkdir -p "$DEST"
 
 echo "Installing GSD commands to ${DEST} ..."
 echo ""
 
 for f in "${FILES[@]}"; do
-  if curl -fsSL "${BASE}/${f}" -o "${DEST}/${f}"; then
-    echo "  ✓ ${f}"
-  else
-    echo "  ✗ ${f} (failed)" >&2
-    exit 1
-  fi
+  gh api "repos/${REPO}/contents/${f}" --jq '.content' \
+    | base64 -d > "${DEST}/${f}"
+  echo "  ✓ ${f}"
 done
 
 echo ""

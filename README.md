@@ -5,19 +5,26 @@
 
 ## Install / Update
 
+Requires the [gh CLI](https://cli.github.com) authenticated with access to `ben-smith-atg/cursor-gsd`.
 Installs all GSD commands to `~/.cursor/commands/gsd/`. Re-running updates files in place.
 
 **macOS / Linux:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ben-smith-atg/cursor-gsd/main/install.sh | bash
+gh api repos/ben-smith-atg/cursor-gsd/contents/install.sh --jq '.content' \
+  | base64 -d | bash
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-irm https://raw.githubusercontent.com/ben-smith-atg/cursor-gsd/main/install.ps1 | iex
+gh api repos/ben-smith-atg/cursor-gsd/contents/install.ps1 --jq '.content' `
+  | % { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) } `
+  | iex
 ```
+
+> If the repo is made public in future, the macOS/Linux install simplifies to:
+> `curl -fsSL https://raw.githubusercontent.com/ben-smith-atg/cursor-gsd/main/install.sh | bash`
 
 ---
 
