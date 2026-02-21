@@ -1,18 +1,20 @@
-# GSD — Get Sh*t Done
+# GSD — Get Sh\*t Done
 
 A structured 5-stage development workflow for Cursor AI. Works with any TypeScript/React/Node.js project.
 
 ## Install / Update
 
-Requires [gh CLI](https://cli.github.com) authenticated with access to this repo.
+Requires [gh CLI](https://cli.github.com) authenticated with access to this repo. Run the one-liner for your platform — re-run at any time to update.
 
 **macOS / Linux**
+
 ```bash
 gh api repos/ben-smith-atg/cursor-gsd/contents/install.sh --jq '.content' \
   | base64 -d | bash
 ```
 
 **Windows (PowerShell)**
+
 ```powershell
 gh api repos/ben-smith-atg/cursor-gsd/contents/install.ps1 --jq '.content' `
   | % { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) } `
@@ -26,11 +28,13 @@ Files land in `~/.cursor/commands/gsd/`. Re-run to update.
 ## Workflow
 
 ### First time in a project
+
 ```
 /gsd/setup-gsd   →  creates .cursor/rules/gsd-project.mdc (run once per project)
 ```
 
 ### Every ticket
+
 ```
 /gsd/spec-gsd    →  research + fetch Jira ticket + document requirements
 /gsd/plan-gsd    →  create step-by-step implementation plan
@@ -41,6 +45,7 @@ Files land in `~/.cursor/commands/gsd/`. Re-run to update.
 ```
 
 ### Optional
+
 ```
 /gsd/retro-gsd   →  capture learnings, improve your Cursor rules
 ```
@@ -49,14 +54,14 @@ Files land in `~/.cursor/commands/gsd/`. Re-run to update.
 
 ## Commands
 
-| Command | Purpose |
-| --- | --- |
-| `/gsd/setup-gsd` | One-time project config — detects pkg manager, base branch, test/lint commands |
-| `/gsd/spec-gsd` | Research phase — Jira integration, API contract review, requirements doc |
-| `/gsd/plan-gsd` | Planning phase — numbered implementation steps saved to `.cursor/plans/` |
-| `/gsd/build-gsd` | Build phase — production code only, no tests, ends at manual test checkpoint |
-| `/gsd/verify-gsd` | Quality phase — writes tests, runs suite + lint + Codacy, generates commit |
-| `/gsd/retro-gsd` | Retro phase — extracts learnings and updates project Cursor rules |
+| Command           | Purpose                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| `/gsd/setup-gsd`  | One-time project config — detects pkg manager, base branch, test/lint commands |
+| `/gsd/spec-gsd`   | Research phase — Jira integration, API contract review, requirements doc       |
+| `/gsd/plan-gsd`   | Planning phase — numbered implementation steps saved to `.cursor/plans/`       |
+| `/gsd/build-gsd`  | Build phase — production code only, no tests, ends at manual test checkpoint   |
+| `/gsd/verify-gsd` | Quality phase — writes tests, runs suite + lint + Codacy, generates commit     |
+| `/gsd/retro-gsd`  | Retro phase — extracts learnings and updates project Cursor rules              |
 
 ---
 
