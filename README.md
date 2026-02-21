@@ -1,4 +1,4 @@
-# GSD — Get Shit Done
+# GSD — Get Sh*t Done
 
 A structured 5-stage development workflow for Cursor AI. Works with any TypeScript/React/Node.js project.
 
