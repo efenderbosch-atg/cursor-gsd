@@ -27,22 +27,22 @@ Files land in `~/.cursor/commands/gsd/`. Re-run to update.
 
 ### First time in a project
 ```
-@setup-gsd   →  creates .cursor/rules/gsd-project.mdc (run once per project)
+/gsd/setup-gsd   →  creates .cursor/rules/gsd-project.mdc (run once per project)
 ```
 
 ### Every ticket
 ```
-@spec-gsd    →  research + fetch Jira ticket + document requirements
-@plan-gsd    →  create step-by-step implementation plan
-@build-gsd   →  write production-quality code (no tests)
+/gsd/spec-gsd    →  research + fetch Jira ticket + document requirements
+/gsd/plan-gsd    →  create step-by-step implementation plan
+/gsd/build-gsd   →  write production-quality code (no tests)
 [manual test]
-@verify-gsd  →  write tests → run suite → lint → Codacy → commit
-@pr-draft    →  create draft PR (auto-detects template)
+/gsd/verify-gsd  →  write tests → run suite → lint → Codacy → commit
+/gsd/pr-draft    →  create draft PR (auto-detects template)
 ```
 
 ### Optional
 ```
-@retro-gsd   →  capture learnings, improve your Cursor rules
+/gsd/retro-gsd   →  capture learnings, improve your Cursor rules
 ```
 
 ---
@@ -51,12 +51,12 @@ Files land in `~/.cursor/commands/gsd/`. Re-run to update.
 
 | Command | Purpose |
 | --- | --- |
-| `@setup-gsd` | One-time project config — detects pkg manager, base branch, test/lint commands |
-| `@spec-gsd` | Research phase — Jira integration, API contract review, requirements doc |
-| `@plan-gsd` | Planning phase — numbered implementation steps saved to `.cursor/plans/` |
-| `@build-gsd` | Build phase — production code only, no tests, ends at manual test checkpoint |
-| `@verify-gsd` | Quality phase — writes tests, runs suite + lint + Codacy, generates commit |
-| `@retro-gsd` | Retro phase — extracts learnings and updates project Cursor rules |
+| `/gsd/setup-gsd` | One-time project config — detects pkg manager, base branch, test/lint commands |
+| `/gsd/spec-gsd` | Research phase — Jira integration, API contract review, requirements doc |
+| `/gsd/plan-gsd` | Planning phase — numbered implementation steps saved to `.cursor/plans/` |
+| `/gsd/build-gsd` | Build phase — production code only, no tests, ends at manual test checkpoint |
+| `/gsd/verify-gsd` | Quality phase — writes tests, runs suite + lint + Codacy, generates commit |
+| `/gsd/retro-gsd` | Retro phase — extracts learnings and updates project Cursor rules |
 
 ---
 
