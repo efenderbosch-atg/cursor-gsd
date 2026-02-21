@@ -4,24 +4,30 @@ A structured 5-stage development workflow for Cursor AI. Works with any TypeScri
 
 ## Install / Update
 
-Requires [gh CLI](https://cli.github.com) authenticated with access to this repo. Run the one-liner for your platform — re-run at any time to update.
+Files land in `~/.cursor/commands/gsd/`. Re-run to update.
 
-**macOS / Linux**
-
+**macOS / Linux** — with [gh CLI](https://cli.github.com):
 ```bash
 gh api repos/ben-smith-atg/cursor-gsd/contents/install.sh --jq '.content' \
   | base64 -d | bash
 ```
 
-**Windows (PowerShell)**
-
+**Windows (PowerShell)** — with [gh CLI](https://cli.github.com):
 ```powershell
 gh api repos/ben-smith-atg/cursor-gsd/contents/install.ps1 --jq '.content' `
   | % { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) } `
   | iex
 ```
 
-Files land in `~/.cursor/commands/gsd/`. Re-run to update.
+**Any platform** — with git:
+```bash
+git clone https://github.com/ben-smith-atg/cursor-gsd.git /tmp/cursor-gsd \
+  && mkdir -p ~/.cursor/commands/gsd \
+  && cp /tmp/cursor-gsd/*.md /tmp/cursor-gsd/install.* ~/.cursor/commands/gsd/ \
+  && rm -rf /tmp/cursor-gsd
+```
+
+Or just clone the repo, copy the `.md` files to `~/.cursor/commands/gsd/`, and you're done.
 
 ---
 
