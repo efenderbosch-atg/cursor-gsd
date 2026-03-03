@@ -109,3 +109,4 @@ if [[ "$TOOL" == "cursor" ]]; then
 else
   echo "Start a new Claude Code session to pick up the updated commands."
 fi
+
