@@ -68,6 +68,68 @@ Ensure code will adhere to:
 - Component library usage (Hammer UI)
 - Import paths, naming conventions, code style
 
+<!-- GSD-CLAUDE-ONLY-START -->
+### 3b. Multi-Agent Build
+
+Read Section 0 of `.claude/plans/[TICKET-ID].md` and Agent Teams config from
+`.claude/rules/gsd-project.md`.
+
+**If scope = service+ui AND Agent Teams enabled**:
+
+#### ── Phase A: Service Agent ────────────────────────────────────────────
+
+Spawn sub-agent (`subagent_type: general-purpose` — needs full write + Bash access):
+
+```
+Working dir: {SERVICE_DIR}
+
+Implement Phase A changes from {TICKET_ID}.md Section 7 (Phase A steps only).
+Read {SERVICE_DIR}/CLAUDE.md for all conventions before writing any code.
+DO write production code. DO NOT write or modify test files.
+After writing all files, run: ./gradlew build
+If build fails, fix ONLY errors in files YOU modified. Iterate up to 5 times.
+Return:
+  - List of created/modified files (path + one-line summary)
+  - Build status (pass/fail)
+  - API contract summary (any new or changed endpoints and DTOs)
+```
+
+Wait for the service agent to complete.
+**If the service build failed**: stop here and surface the error to the user.
+Do NOT proceed to Phase B.
+
+#### ── Phase B: UI Agent ─────────────────────────────────────────────────
+
+(Only after Phase A succeeds)
+
+Spawn sub-agent (`subagent_type: general-purpose` — needs full write + Bash access):
+
+```
+Working dir: {UI_DIR}
+
+Implement Phase B changes from {TICKET_ID}.md Section 7 (Phase B steps only).
+API contract from the completed service phase: [paste Phase A contract summary].
+DO write production code. DO NOT write or modify test files.
+After writing all files, run: pnpm build
+If build fails, fix ONLY errors in files YOU modified. Iterate up to 5 times.
+Return:
+  - List of created/modified files (path + one-line summary)
+  - Build status (pass/fail)
+```
+
+Wait for the UI agent to complete.
+**If the UI build failed**: stop here and surface the error to the user.
+
+#### ── Continue ───────────────────────────────────────────────────────────
+
+Append combined build log to the plans file Section 8 with separate per-repo
+tables (service files + UI files).
+
+Proceed to the Build Checkpoint (Step 6) with results from both agents.
+
+**If scope = single repo OR Agent Teams disabled**: skip to Step 3 below.
+<!-- GSD-CLAUDE-ONLY-END -->
+
 ### 3. Build Execution Loop
 
 For each implementation step in the plan:

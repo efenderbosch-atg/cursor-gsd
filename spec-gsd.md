@@ -106,9 +106,67 @@ This ensures you understand:
 - Component library usage (e.g., Hammer UI)
 - Domain-specific constraints
 
+<!-- GSD-CLAUDE-ONLY-START -->
+### 2b. Scope Detection
+
+Read the Agent Teams config from `.claude/rules/gsd-project.md` (the `### Agent Teams` section).
+
+**If Enabled = true**:
+
+1. Auto-detect scope from the Jira ticket content:
+   - **SERVICE indicators**: "endpoint", "API", "controller", "service", "repository",
+     "migration", "database", Jira component contains "Backend", "API", or "Service"
+   - **UI indicators**: "page", "component", "UI", "form", "display", "render",
+     Jira component contains "Frontend" or "UI"
+
+2. Propose to user:
+   > "Detected scope: [SERVICE ✓] [UI ✓] — confirm or adjust?"
+
+3. Store the confirmed scope in the plan file as **Section 0** (prepend before Section 1):
+
+   ```markdown
+   ## 0. Scope
+
+   - Scope: [service | ui | service+ui]
+   - Service repo: [path from gsd-project config, or N/A]
+   - UI repo: [path from gsd-project config, or N/A]
+   ```
+
+**If Enabled = false or N/A**:
+- Scope = current repo only. Proceed normally. No Section 0 needed.
+<!-- GSD-CLAUDE-ONLY-END -->
+
 ### 3. Research Phase
 
 Use parallel tool calls for efficiency:
+
+<!-- GSD-CLAUDE-ONLY-START -->
+**Multi-Repo Research** (when scope = service+ui AND Agent Teams enabled):
+
+Spawn TWO parallel research sub-agents using the Agent tool:
+
+**Agent 1 — Service research** (`subagent_type: Explore`, `run_in_background: true`):
+```
+Research {SERVICE_DIR} for ticket {TICKET_ID}.
+Find: relevant controllers/services/repositories, API contract (DTOs, endpoints,
+request/response shapes), and similar existing implementations.
+Return: file paths with line numbers, key patterns, constraints, and a
+concise API contract summary (new or changed endpoints + DTOs).
+```
+
+**Agent 2 — UI research** (`subagent_type: Explore`, `run_in_background: true`):
+```
+Research {UI_DIR} for ticket {TICKET_ID}.
+Find: relevant components/hooks/types, existing API call patterns,
+TypeScript types that map to backend DTOs.
+Return: file paths with line numbers, key patterns, constraints.
+```
+
+Launch both simultaneously. Wait for both to complete. Merge the findings
+into the single spec document (Sections 3 and 4).
+
+**Single-repo research** (scope = single repo OR Agent Teams disabled):
+<!-- GSD-CLAUDE-ONLY-END -->
 
 **Codebase Search**:
 - `SemanticSearch` for conceptual searches ("Where is marketplace filter implemented?")

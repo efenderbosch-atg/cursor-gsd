@@ -137,6 +137,30 @@ Present a summary of detected values and ask:
 - "Does this look correct? Any changes?"
 - Fill in any `unknown` values with user input
 
+<!-- GSD-CLAUDE-ONLY-START -->
+### 11b. Detect Peer Repos & Agent Teams
+
+**Detect current repo type**:
+```bash
+ls gradlew build.gradle.kts 2>/dev/null && echo "service"
+ls package.json next.config* 2>/dev/null && echo "ui"
+```
+
+**Detect peer repos (check sibling directories)**:
+```bash
+ls -d ../*/gradlew 2>/dev/null            # sibling service repos
+ls -d ../*/next.config* 2>/dev/null        # sibling UI repos
+ls -d ../*/playwright.config* 2>/dev/null  # sibling E2E repos
+```
+
+**If peer repos are found**:
+Ask: "I found peer repos: [list paths]. Enable parallel agent teams for multi-repo tickets? (y/n)"
+
+**If no peers found**: Set Agent Teams = N/A, skip question.
+
+**Store results** for inclusion in gsd-project config (Step 12).
+<!-- GSD-CLAUDE-ONLY-END -->
+
 ### 12. Write gsd-project.mdc
 
 Create or overwrite `.cursor/rules/gsd-project.mdc`:
@@ -190,6 +214,13 @@ OR
 - Provider: gh
 - Organization: [org]
 - Repository: [repo]
+
+<!-- GSD-CLAUDE-ONLY-START -->
+### Agent Teams (Claude Code)
+- Enabled: [true|false|N/A - single repo]
+- This repo type: [service|ui|unknown]
+- Peer repos: [none | service: ../path, ui: ../path]
+<!-- GSD-CLAUDE-ONLY-END -->
 ```
 
 ### 13. Completion

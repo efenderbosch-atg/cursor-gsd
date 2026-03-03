@@ -76,6 +76,34 @@ Ensure the plan will comply with:
 
 ### 4. Create Implementation Plan
 
+<!-- GSD-CLAUDE-ONLY-START -->
+**Multi-Repo Planning** (when scope = service+ui AND Agent Teams enabled, from Section 0):
+
+Optionally spawn TWO parallel Plan sub-agents (`subagent_type: Plan`, `run_in_background: true`):
+
+**Agent 1 — Service plan**:
+```
+Design Phase A implementation steps for {TICKET_ID} in {SERVICE_DIR}.
+Context: [paste service research findings from spec Section 3].
+Output: numbered steps with file paths, reasons, and dependencies.
+```
+
+**Agent 2 — UI plan**:
+```
+Design Phase B implementation steps for {TICKET_ID} in {UI_DIR}.
+Context: [paste UI research findings from spec Section 3].
+API contract from Phase A: [paste contract summary from spec Section 4].
+Output: numbered steps with file paths, reasons, and dependencies.
+Note: Phase B depends on Phase A API contract being finalised.
+```
+
+Launch both (`run_in_background: true`). Wait for both. Merge into Section 7 using
+the Phase A / Phase B / Phase C structure below.
+
+**Single-repo planning** (scope = single repo OR Agent Teams disabled):
+Use the existing single-phase structure below (omit Phase A/B/C headings).
+<!-- GSD-CLAUDE-ONLY-END -->
+
 Append this section to `.cursor/plans/[TICKET-ID].md`:
 
 ```markdown
@@ -84,6 +112,39 @@ Append this section to `.cursor/plans/[TICKET-ID].md`:
 ## 7. Implementation Plan
 
 > Generated on [Date]
+
+<!-- GSD-CLAUDE-ONLY-START: For service+ui scope, replace single-phase structure with A/B/C below -->
+<!-- For single-repo tickets, use the standard Phase 1–5 structure; omit the A/B/C headings.    -->
+
+### Phase A — Service [repo: {SERVICE_DIR}]
+
+**Goal**: Implement API endpoints, DTOs, business logic, persistence, and service tests
+
+- [ ] [Step 1]
+  - **Change**: [Describe]
+  - **Reason**: [Why]
+  - **Dependencies**: [What this affects]
+
+### Phase B — UI [repo: {UI_DIR}]
+
+> Depends on Phase A API contract being finalised
+
+**Goal**: Implement components, hooks, TypeScript types, API integration, and UI tests
+
+- [ ] [Step 1]
+  - **Change**: [Describe]
+  - **Reason**: [Why]
+  - **Dependencies**: [What this affects]
+
+### Phase C — Integration Notes
+
+**API Contract Summary**:
+- Endpoints: [METHOD /api/v.../resource]
+- Request shape: [summary]
+- Response shape: [summary]
+- Shared types or breaking changes: [any coordination needed]
+
+<!-- GSD-CLAUDE-ONLY-END -->
 
 ### Phase 1: Setup & Types
 

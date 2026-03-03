@@ -92,6 +92,91 @@ Compare implementation against the original spec:
 - Ensure ALL checkboxes are marked `[x]`
 - Document any remaining `[ ]` items before proceeding
 
+<!-- GSD-CLAUDE-ONLY-START -->
+### 4b. Multi-Agent Verify
+
+Read Section 0 of `.claude/plans/[TICKET-ID].md` and Agent Teams config from
+`.claude/rules/gsd-project.md`.
+
+**If scope = service+ui AND Agent Teams enabled**:
+
+#### ── Service Verify Agent ────────────────────────────────────────────
+
+Spawn sub-agent (`subagent_type: general-purpose`):
+
+```
+Working dir: {SERVICE_DIR}
+
+Verify Phase A changes from {TICKET_ID}.md.
+1. Write tests for all modified files (Spock specs, following project conventions)
+2. Run: ./gradlew test
+3. Run: ./gradlew detektMain detektTest codenarcTest
+4. For each modified file, run Codacy MCP analysis
+5. Fix issues: security = MUST, code smells = SHOULD, style = NICE
+Iterate up to 5 times per gate. Stop and document if unresolved after 5.
+Return:
+  - Tests written (file paths, count of test cases)
+  - Gate results (tests / lint / Codacy: pass/fail, iteration count)
+  - Proposed commit message for service changes
+```
+
+Wait for service verify to complete.
+**If any gate is still failing**: surface errors to the user before continuing.
+
+#### ── UI Verify Agent ─────────────────────────────────────────────────
+
+Spawn sub-agent (`subagent_type: general-purpose`):
+
+```
+Working dir: {UI_DIR}
+
+Verify Phase B changes from {TICKET_ID}.md.
+1. Write tests for all modified files (Vitest, following project conventions)
+2. Run: pnpm test
+3. Run: pnpm lint
+4. For each modified file, run Codacy MCP analysis
+5. Fix issues: security = MUST, code smells = SHOULD, style = NICE
+Iterate up to 5 times per gate. Stop and document if unresolved after 5.
+Return:
+  - Tests written (file paths, count of test cases)
+  - Gate results (tests / lint / Codacy: pass/fail, iteration count)
+  - Proposed commit message for UI changes
+```
+
+Wait for UI verify to complete.
+
+#### ── PR Review Toolkit ───────────────────────────────────────────────
+
+(After both verify agents succeed — run from the main agent)
+
+Spawn four parallel review agents against the combined diff of both repos:
+
+- `subagent_type: pr-review-toolkit:code-reviewer`
+- `subagent_type: pr-review-toolkit:silent-failure-hunter`
+- `subagent_type: pr-review-toolkit:pr-test-analyzer`
+- `subagent_type: pr-review-toolkit:type-design-analyzer`
+
+Triage findings:
+- **MUST fix**: security issues, silent failures, type invariant violations
+- **SHOULD fix**: coverage gaps, style violations
+- **NICE**: comment accuracy, simplification opportunities
+
+Fix all MUST items. Re-run the affected toolkit agents to confirm resolved.
+
+#### ── Collect Results ─────────────────────────────────────────────────
+
+Append Section 10 to the plans file with gate results from both verify agents
+plus PR toolkit findings.
+
+Generate TWO commit messages (one per repo), or ask the user if they prefer
+a single combined mono-repo-style commit.
+
+**STOP and present the full summary before committing either repo.**
+The user must explicitly approve each commit.
+
+**If scope = single repo OR Agent Teams disabled**: skip to Step 5 below.
+<!-- GSD-CLAUDE-ONLY-END -->
+
 ### 5. Write Tests
 
 This is the primary new responsibility of VERIFY.
@@ -178,6 +263,28 @@ For EACH modified file, run Codacy MCP analysis:
 3. Style issues (NICE to fix)
 
 Re-run Codacy on each file after fixing (up to 5 iterations per file).
+
+<!-- GSD-CLAUDE-ONLY-START -->
+### 9b. PR Review Toolkit
+
+After Codacy passes (Step 9), spawn four parallel review agents against the git diff:
+
+- `subagent_type: pr-review-toolkit:code-reviewer`
+- `subagent_type: pr-review-toolkit:silent-failure-hunter`
+- `subagent_type: pr-review-toolkit:pr-test-analyzer`
+- `subagent_type: pr-review-toolkit:type-design-analyzer`
+
+Launch all four simultaneously. Wait for all to complete.
+
+**Triage findings**:
+- **MUST fix**: security issues, silent failures, type invariant violations
+- **SHOULD fix**: coverage gaps, style violations
+- **NICE**: comment accuracy, simplification opportunities
+
+Fix all MUST items. Re-run the affected toolkit agents to confirm resolved.
+
+Log toolkit results in Section 10 alongside test / lint / Codacy results.
+<!-- GSD-CLAUDE-ONLY-END -->
 
 ### 10. Root Cause Analysis & Logging
 
