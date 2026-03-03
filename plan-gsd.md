@@ -113,8 +113,8 @@ Append this section to `.cursor/plans/[TICKET-ID].md`:
 
 > Generated on [Date]
 
-<!-- GSD-CLAUDE-ONLY-START: For service+ui scope, replace single-phase structure with A/B/C below -->
-<!-- For single-module tickets, use the standard Phase 1–5 structure; omit the A/B/C headings.  -->
+<!-- For service+ui scope: use Phase A/B/C below instead of Phase 1–5. -->
+<!-- For single-module tickets: use Phase 1–5; omit the A/B/C headings.  -->
 
 ### Phase A — Service [repo: {SERVICE_DIR}]
 
