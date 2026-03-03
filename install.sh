@@ -8,11 +8,10 @@
 #     | base64 -d | bash
 #
 # Or clone and run locally:
-#   bash ~/.cursor/commands/gsd/install.sh
+#   bash /path/to/cursor-gsd/install.sh
 set -euo pipefail
 
 REPO="ben-smith-atg/cursor-gsd"
-DEST="${HOME}/.cursor/commands/gsd"
 FILES=(
   setup-gsd.md
   spec-gsd.md
@@ -23,6 +22,59 @@ FILES=(
   README.md
 )
 
+# --- Tool selection ---
+echo ""
+echo "Install GSD commands for which AI tool?"
+echo "  1) Cursor"
+echo "  2) Claude Code"
+printf "Choice [1/2]: "
+if read -r TOOL_CHOICE </dev/tty 2>/dev/null; then
+  : # got input from tty
+else
+  TOOL_CHOICE="1" # default to Cursor in non-interactive environments
+fi
+echo ""
+
+case "$TOOL_CHOICE" in
+  2)
+    TOOL="claude"
+    DEST="${HOME}/.claude/commands/gsd"
+    TOOL_NAME="Claude Code"
+    ;;
+  *)
+    TOOL="cursor"
+    DEST="${HOME}/.cursor/commands/gsd"
+    TOOL_NAME="Cursor"
+    ;;
+esac
+
+# --- Substitution ---
+# Strips tool-specific conditional markers and applies path/token substitutions.
+# GSD source files use HTML comments to delimit tool-specific sections:
+#   <!-- GSD-CURSOR-ONLY-START --> ... <!-- GSD-CURSOR-ONLY-END -->
+#   <!-- GSD-CLAUDE-ONLY-START --> ... <!-- GSD-CLAUDE-ONLY-END -->
+apply_subs() {
+  if [[ "$TOOL" == "claude" ]]; then
+    sed \
+      -e '/<!-- GSD-CURSOR-ONLY-START -->/,/<!-- GSD-CURSOR-ONLY-END -->/d' \
+      -e '/<!-- GSD-CLAUDE-ONLY-START -->/d' \
+      -e '/<!-- GSD-CLAUDE-ONLY-END -->/d' \
+      -e 's|\.cursor/rules/|.claude/rules/|g' \
+      -e 's|\.cursor/plans/|.claude/plans/|g' \
+      -e 's|\.cursor/commands/|.claude/commands/|g' \
+      -e 's|\.mdc|.md|g' \
+      -e 's/cursor rules/project rules/g' \
+      -e 's/Cursor rules/project rules/g' \
+      -e 's/`SemanticSearch`/the `Explore` agent (via Agent tool)/g'
+  else
+    sed \
+      -e '/<!-- GSD-CURSOR-ONLY-START -->/d' \
+      -e '/<!-- GSD-CURSOR-ONLY-END -->/d' \
+      -e '/<!-- GSD-CLAUDE-ONLY-START -->/,/<!-- GSD-CLAUDE-ONLY-END -->/d'
+  fi
+}
+
+# --- Install ---
 if ! command -v gh &>/dev/null; then
   echo "Error: gh CLI is required. Install from https://cli.github.com" >&2
   exit 1
@@ -30,15 +82,21 @@ fi
 
 mkdir -p "$DEST"
 
-echo "Installing GSD commands to ${DEST} ..."
+echo "Installing GSD commands for ${TOOL_NAME} to ${DEST} ..."
 echo ""
 
 for f in "${FILES[@]}"; do
   gh api "repos/${REPO}/contents/${f}" --jq '.content' \
-    | base64 -d > "${DEST}/${f}"
+    | base64 -d \
+    | apply_subs \
+    > "${DEST}/${f}"
   echo "  ✓ ${f}"
 done
 
 echo ""
 echo "Done. ${#FILES[@]} files installed to ${DEST}"
-echo "Restart Cursor to pick up the updated commands."
+if [[ "$TOOL" == "cursor" ]]; then
+  echo "Restart Cursor to pick up the updated commands."
+else
+  echo "Start a new Claude Code session to pick up the updated commands."
+fi

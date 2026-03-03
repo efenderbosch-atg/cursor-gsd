@@ -2,7 +2,7 @@
 
 <!-- Type: setup-gsd | Category: GSD | Full: setup-gsd -->
 
-Run **once per project** to detect configuration and write `.cursor/rules/gsd-project.mdc`.
+Run **once per project** to detect configuration and write `.cursor/rules/gsd-project.mdc` (Cursor) or `.claude/rules/gsd-project.md` (Claude Code).
 
 ---
 
@@ -12,7 +12,7 @@ Run **once per project** to detect configuration and write `.cursor/rules/gsd-pr
 
 **What happens**: I'll auto-detect everything I can, ask you to confirm or fill in any gaps, then write a project config file that all GSD commands read instead of guessing.
 
-**Expected output**: `.cursor/rules/gsd-project.mdc` — the single source of truth for this project's GSD config.
+**Expected output**: `.cursor/rules/gsd-project.mdc` (Cursor) or `.claude/rules/gsd-project.md` (Claude Code) — the single source of truth for this project's GSD config.
 
 ---
 
@@ -142,11 +142,13 @@ Present a summary of detected values and ask:
 Create or overwrite `.cursor/rules/gsd-project.mdc`:
 
 ```markdown
+<!-- GSD-CURSOR-ONLY-START -->
 ---
 description: GSD project configuration — run /setup-gsd to regenerate
 globs: ["**/*"]
 alwaysApply: false
 ---
+<!-- GSD-CURSOR-ONLY-END -->
 
 ## GSD Project Config: [PROJECT-NAME]
 
@@ -210,4 +212,9 @@ To regenerate: run `/setup-gsd` again (it overwrites the existing file).
 - **Non-destructive to other rules**: Only creates/updates `gsd-project.mdc` — never touches `codacy.mdc` or any other rule file.
 - **Safe to re-run**: Overwrites the previous config, asks for confirmation before writing.
 - **Monorepo tip**: Run from the monorepo root. The config covers the whole repo; individual subpackage commands are specified in the Commands section.
+<!-- GSD-CURSOR-ONLY-START -->
 - **The `alwaysApply: false` flag**: Cursor will only read this file when a GSD command explicitly loads it (via the Pre-Flight step), keeping it out of every other conversation's context.
+<!-- GSD-CURSOR-ONLY-END -->
+<!-- GSD-CLAUDE-ONLY-START -->
+- **Context management**: Claude Code reads `.claude/rules/*.md` files only when explicitly referenced in skill prompts (via the Pre-Flight step), keeping project rules out of unrelated conversations.
+<!-- GSD-CLAUDE-ONLY-END -->

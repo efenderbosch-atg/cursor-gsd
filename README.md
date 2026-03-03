@@ -1,10 +1,10 @@
 # GSD — Get Sh\*t Done
 
-A structured 5-stage development workflow for Cursor AI. Works with any TypeScript/React/Node.js project.
+A structured 5-stage development workflow for AI editors. Supports **Cursor** and **Claude Code**.
 
 ## Install / Update
 
-Files land in `~/.cursor/commands/gsd/`. Re-run to update.
+The installer will ask which tool you're using and install files to the right location. Re-run to update.
 
 **macOS / Linux** — with [gh CLI](https://cli.github.com):
 ```bash
@@ -22,12 +22,13 @@ gh api repos/ben-smith-atg/cursor-gsd/contents/install.ps1 --jq '.content' `
 **Any platform** — with git:
 ```bash
 git clone https://github.com/ben-smith-atg/cursor-gsd.git /tmp/cursor-gsd \
-  && mkdir -p ~/.cursor/commands/gsd \
-  && cp /tmp/cursor-gsd/*.md /tmp/cursor-gsd/install.* ~/.cursor/commands/gsd/ \
+  && bash /tmp/cursor-gsd/install.sh \
   && rm -rf /tmp/cursor-gsd
 ```
 
-Or just clone the repo, copy the `.md` files to `~/.cursor/commands/gsd/`, and you're done.
+Installed locations:
+- **Cursor**: `~/.cursor/commands/gsd/`
+- **Claude Code**: `~/.claude/commands/gsd/`
 
 ---
 
