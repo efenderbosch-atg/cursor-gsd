@@ -65,7 +65,16 @@ apply_subs() {
       -e 's|\.mdc|.md|g' \
       -e 's/cursor rules/project rules/g' \
       -e 's/Cursor rules/project rules/g' \
-      -e 's/`SemanticSearch`/the `Explore` agent (via Agent tool)/g'
+      -e 's/`SemanticSearch`/the `Explore` agent (via Agent tool)/g' \
+      -e 's/.*alwaysApply.*false.*flag.*/- **Context management**: Claude Code reads project rules only when explicitly referenced in skill prompts (via the Pre-Flight step), keeping them out of unrelated conversations./' \
+    | awk '
+      /^---$/                                    { pending = $0; next }
+      /^description: GSD project configuration/ { skip = 1; pending = ""; next }
+      skip && /^---$/                            { skip = 0; next }
+      skip                                       { next }
+      length(pending) > 0                        { print pending; pending = "" }
+                                                 { print }
+    '
   else
     sed \
       -e '/<!-- GSD-CURSOR-ONLY-START -->/d' \

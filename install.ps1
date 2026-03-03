@@ -62,6 +62,10 @@ function Apply-Subs {
         $Content = $Content -replace 'cursor rules', 'project rules'
         $Content = $Content -replace 'Cursor rules', 'project rules'
         $Content = $Content -replace '`SemanticSearch`', 'the `Explore` agent (via Agent tool)'
+        # Remove Cursor-specific frontmatter block from the setup-gsd config template
+        $Content = $Content -replace '(?s)\r?\n---\r?\ndescription: GSD project configuration.*?alwaysApply: false\r?\n---', ''
+        # Replace alwaysApply explanation note with Claude Code equivalent
+        $Content = $Content -replace '.*alwaysApply.*false.*flag.*', '- **Context management**: Claude Code reads project rules only when explicitly referenced in skill prompts (via the Pre-Flight step), keeping them out of unrelated conversations.'
     } else {
         # Strip cursor-only markers (keep the content between them)
         $Content = $Content -replace '<!-- GSD-CURSOR-ONLY-START -->\r?\n', ''
