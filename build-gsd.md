@@ -127,7 +127,7 @@ tables (service files + UI files).
 
 Proceed to the Build Checkpoint (Step 6) with results from both agents.
 
-**If scope = single repo OR Agent Teams disabled**: skip to Step 3 below.
+**If scope = single module OR Agent Teams disabled**: skip to Step 3 below.
 <!-- GSD-CLAUDE-ONLY-END -->
 
 ### 3. Build Execution Loop

@@ -100,7 +100,7 @@ Note: Phase B depends on Phase A API contract being finalised.
 Launch both (`run_in_background: true`). Wait for both. Merge into Section 7 using
 the Phase A / Phase B / Phase C structure below.
 
-**Single-repo planning** (scope = single repo OR Agent Teams disabled):
+**Single-module planning** (scope = single module OR Agent Teams disabled):
 Use the existing single-phase structure below (omit Phase A/B/C headings).
 <!-- GSD-CLAUDE-ONLY-END -->
 
@@ -114,7 +114,7 @@ Append this section to `.cursor/plans/[TICKET-ID].md`:
 > Generated on [Date]
 
 <!-- GSD-CLAUDE-ONLY-START: For service+ui scope, replace single-phase structure with A/B/C below -->
-<!-- For single-repo tickets, use the standard Phase 1–5 structure; omit the A/B/C headings.    -->
+<!-- For single-module tickets, use the standard Phase 1–5 structure; omit the A/B/C headings.  -->
 
 ### Phase A — Service [repo: {SERVICE_DIR}]
 

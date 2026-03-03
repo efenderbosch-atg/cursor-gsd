@@ -154,7 +154,7 @@ ls -d ../*/playwright.config* 2>/dev/null  # sibling E2E repos
 ```
 
 **If peer repos are found**:
-Ask: "I found peer repos: [list paths]. Enable parallel agent teams for multi-repo tickets? (y/n)"
+Ask: "I found peer repos: [list paths]. Enable parallel agent teams for multi-module tickets? (y/n)"
 
 **If no peers found**: Set Agent Teams = N/A, skip question.
 
@@ -217,7 +217,7 @@ OR
 
 <!-- GSD-CLAUDE-ONLY-START -->
 ### Agent Teams (Claude Code)
-- Enabled: [true|false|N/A - single repo]
+- Enabled: [true|false|N/A - single module]
 - This repo type: [service|ui|unknown]
 - Peer repos: [none | service: ../path, ui: ../path]
 <!-- GSD-CLAUDE-ONLY-END -->

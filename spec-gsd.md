@@ -165,7 +165,7 @@ Return: file paths with line numbers, key patterns, constraints.
 Launch both simultaneously. Wait for both to complete. Merge the findings
 into the single spec document (Sections 3 and 4).
 
-**Single-repo research** (scope = single repo OR Agent Teams disabled):
+**Single-module research** (scope = single module OR Agent Teams disabled):
 <!-- GSD-CLAUDE-ONLY-END -->
 
 **Codebase Search**:

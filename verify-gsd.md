@@ -174,7 +174,7 @@ a single combined mono-repo-style commit.
 **STOP and present the full summary before committing either repo.**
 The user must explicitly approve each commit.
 
-**If scope = single repo OR Agent Teams disabled**: skip to Step 5 below.
+**If scope = single module OR Agent Teams disabled**: skip to Step 5 below.
 <!-- GSD-CLAUDE-ONLY-END -->
 
 ### 5. Write Tests
